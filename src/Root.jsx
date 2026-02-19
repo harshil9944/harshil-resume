@@ -34,6 +34,7 @@ function RootContent() {
         <Route path="/pm" element={<App careerPath="pm" />} />
         <Route path="/aie" element={<App careerPath="aie" />} />
         <Route path="/" element={<App careerPath="aie" />} />
+        <Route path="*" element={<App careerPath="aie" />} />
       </Routes>
     </div>
   )
