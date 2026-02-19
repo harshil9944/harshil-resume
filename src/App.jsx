@@ -112,9 +112,6 @@ function App({ careerPath = 'aie' }) {
 
   return (
     <div className="app">
-      {/* Scroll Progress Indicator */}
-      <div className="scroll-progress" style={{ width: `${scrollProgress}%` }}></div>
-      
       {/* Toast Notification */}
       {toast.show && (
         <div className="toast">
@@ -138,7 +135,10 @@ function App({ careerPath = 'aie' }) {
         </button>
       )}
       
-      <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
+      <nav 
+        className={`navbar ${scrolled ? 'scrolled' : ''}`}
+        style={{ '--scroll-progress': `${scrollProgress}%` } as React.CSSProperties}
+      >
         <div className="nav-container">
           <a href="#home" className="nav-logo" onClick={(e) => { e.preventDefault(); scrollToSection('home') }}>
             <span className="logo-text">{config.hero.name.split(' ')[0]}</span>

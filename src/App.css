@@ -7,17 +7,7 @@
   position: relative;
 }
 
-/* Scroll Progress Indicator */
-.scroll-progress {
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 3px;
-  background: linear-gradient(to right, var(--color-primary), var(--color-accent));
-  z-index: 10000;
-  transition: width 0.1s ease-out;
-  box-shadow: 0 2px 8px rgba(14, 165, 233, 0.3);
-}
+/* Scroll Progress Indicator - Removed, now integrated into navbar */
 
 /* Back to Top Button */
 .back-to-top {
@@ -93,7 +83,7 @@
   }
 }
 
-/* Navigation Bar */
+/* Navigation Bar with Progress Fill */
 .navbar {
   position: fixed;
   top: 0;
@@ -106,12 +96,48 @@
   border-bottom: 1px solid rgba(226, 232, 240, 0.5);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Progress fill effect */
+.navbar::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: var(--scroll-progress, 0%);
+  background: linear-gradient(90deg, 
+    rgba(14, 165, 233, 0.25) 0%, 
+    rgba(6, 182, 212, 0.3) 50%,
+    rgba(14, 165, 233, 0.25) 100%
+  );
+  transition: width 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 0;
+  pointer-events: none;
+  border-right: 2px solid rgba(14, 165, 233, 0.4);
+  box-shadow: 0 0 20px rgba(14, 165, 233, 0.2);
+}
+
+.navbar > * {
+  position: relative;
+  z-index: 1;
 }
 
 .navbar.scrolled {
   background: rgba(255, 255, 255, 0.95);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   border-bottom-color: rgba(226, 232, 240, 0.8);
+}
+
+.navbar.scrolled::before {
+  background: linear-gradient(90deg, 
+    rgba(14, 165, 233, 0.3) 0%, 
+    rgba(6, 182, 212, 0.35) 50%,
+    rgba(14, 165, 233, 0.3) 100%
+  );
+  box-shadow: 0 0 30px rgba(14, 165, 233, 0.3);
 }
 
 .nav-container {
