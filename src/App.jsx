@@ -7,13 +7,40 @@ function App({ careerPath = 'aie' }) {
   const [activeTab, setActiveTab] = useState('about')
   const [scrolled, setScrolled] = useState(false)
   const [isVisible, setIsVisible] = useState(false)
+  const [scrollProgress, setScrollProgress] = useState(0)
+  const [showBackToTop, setShowBackToTop] = useState(false)
+  const [activeSection, setActiveSection] = useState('home')
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [toast, setToast] = useState({ show: false, message: '' })
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 50)
+      const scrollTop = window.scrollY
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight
+      const progress = (scrollTop / docHeight) * 100
+      
+      setScrollProgress(progress)
+      setScrolled(scrollTop > 50)
+      setShowBackToTop(scrollTop > 300)
+      
+      // Update active section based on scroll position
+      const sections = ['home', 'projects', 'contact']
+      const currentSection = sections.find(section => {
+        const element = document.getElementById(section)
+        if (element) {
+          const rect = element.getBoundingClientRect()
+          return rect.top <= 100 && rect.bottom >= 100
+        }
+        return false
+      })
+      if (currentSection) {
+        setActiveSection(currentSection)
+      }
     }
+    
     window.addEventListener('scroll', handleScroll)
     setIsVisible(true)
+    handleScroll() // Initial call
     
     // Intersection Observer for fade-in animations
     const observerOptions = {
@@ -37,6 +64,16 @@ function App({ careerPath = 'aie' }) {
       observer.disconnect()
     }
   }, [])
+  
+  const copyEmail = () => {
+    navigator.clipboard.writeText('harshilcpatel9944@gmail.com')
+    setToast({ show: true, message: 'Email copied to clipboard!' })
+    setTimeout(() => setToast({ show: false, message: '' }), 3000)
+  }
+  
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
 
   const shareOn = (platform) => {
     const url = window.location.href
@@ -75,15 +112,81 @@ function App({ careerPath = 'aie' }) {
 
   return (
     <div className="app">
+      {/* Scroll Progress Indicator */}
+      <div className="scroll-progress" style={{ width: `${scrollProgress}%` }}></div>
+      
+      {/* Toast Notification */}
+      {toast.show && (
+        <div className="toast">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M20 6L9 17l-5-5"/>
+          </svg>
+          <span>{toast.message}</span>
+        </div>
+      )}
+      
+      {/* Back to Top Button */}
+      {showBackToTop && (
+        <button 
+          className="back-to-top"
+          onClick={scrollToTop}
+          aria-label="Back to top"
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M18 15l-6-6-6 6"/>
+          </svg>
+        </button>
+      )}
+      
       <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
         <div className="nav-container">
           <a href="#home" className="nav-logo" onClick={(e) => { e.preventDefault(); scrollToSection('home') }}>
             <span className="logo-text">{config.hero.name.split(' ')[0]}</span>
           </a>
-          <div className="nav-links">
-            <a href="#home" onClick={(e) => { e.preventDefault(); scrollToSection('home') }}>Home</a>
-            <a href="#projects" onClick={(e) => { e.preventDefault(); scrollToSection('projects'); setActiveTab('projects') }}>Portfolio</a>
-            <a href="#contact" onClick={(e) => { e.preventDefault(); scrollToSection('contact') }}>Contact</a>
+          <button 
+            className="mobile-menu-toggle"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label="Toggle menu"
+          >
+            <span className={mobileMenuOpen ? 'open' : ''}></span>
+            <span className={mobileMenuOpen ? 'open' : ''}></span>
+            <span className={mobileMenuOpen ? 'open' : ''}></span>
+          </button>
+          <div className={`nav-links ${mobileMenuOpen ? 'mobile-open' : ''}`}>
+            <a 
+              href="#home" 
+              className={activeSection === 'home' ? 'active' : ''}
+              onClick={(e) => { 
+                e.preventDefault(); 
+                scrollToSection('home'); 
+                setMobileMenuOpen(false);
+              }}
+            >
+              Home
+            </a>
+            <a 
+              href="#projects" 
+              className={activeSection === 'projects' ? 'active' : ''}
+              onClick={(e) => { 
+                e.preventDefault(); 
+                scrollToSection('projects'); 
+                setActiveTab('projects');
+                setMobileMenuOpen(false);
+              }}
+            >
+              Portfolio
+            </a>
+            <a 
+              href="#contact" 
+              className={activeSection === 'contact' ? 'active' : ''}
+              onClick={(e) => { 
+                e.preventDefault(); 
+                scrollToSection('contact');
+                setMobileMenuOpen(false);
+              }}
+            >
+              Contact
+            </a>
           </div>
         </div>
       </nav>
@@ -138,10 +241,6 @@ function App({ careerPath = 'aie' }) {
               <li>
                 <span>Role</span>
                 <strong>{config.hero.meta}</strong>
-              </li>
-              <li>
-                <span>Open to</span>
-                <strong>Full-time</strong>
               </li>
             </ul>
           </div>
@@ -336,7 +435,7 @@ function App({ careerPath = 'aie' }) {
                 <div className="grid">
                   {config.projects && config.projects.length > 0 ? (
                     config.projects.map((project, index) => (
-                      <article className="card" key={index}>
+                      <article className="card" key={index} style={{ animationDelay: `${index * 0.1}s` }}>
                         <h3>{project.title}</h3>
                         <p className="muted">
                           {project.description}
@@ -355,7 +454,7 @@ function App({ careerPath = 'aie' }) {
                     ))
                   ) : (
                     <>
-                      <article className="card">
+                      <article className="card" style={{ animationDelay: '0s' }}>
                         <h3>Customer Lifetime Value Prediction</h3>
                         <p className="muted">
                           Analyzed transactional data and engineered RFM (Recency, Frequency, Monetary) features. Applied K-Means 
@@ -370,7 +469,7 @@ function App({ careerPath = 'aie' }) {
                         </div>
                       </article>
 
-                      <article className="card">
+                      <article className="card" style={{ animationDelay: '0.1s' }}>
                         <h3>Fraud Detection Using Machine Learning</h3>
                         <p className="muted">
                           Analyzed and validated financial transaction data to identify fraud patterns. Experimented with multiple ML 
@@ -385,7 +484,7 @@ function App({ careerPath = 'aie' }) {
                         </div>
                       </article>
 
-                      <article className="card">
+                      <article className="card" style={{ animationDelay: '0.2s' }}>
                         <h3>Seizure Prediction Using CNNs</h3>
                         <p className="muted">
                           Developed a hybrid CNN and self-attention model for early prediction of epileptic seizures using EEG signals. 
@@ -479,9 +578,22 @@ function App({ careerPath = 'aie' }) {
             <p className="footer-text">
               Interested in collaborating or discussing opportunities? Let's connect!
             </p>
-            <a href="mailto:harshilcpatel9944@gmail.com" className="footer-email">
-              harshilcpatel9944@gmail.com
-            </a>
+            <div className="footer-email-container">
+              <a href="mailto:harshilcpatel9944@gmail.com" className="footer-email">
+                harshilcpatel9944@gmail.com
+              </a>
+              <button 
+                className="copy-email-btn"
+                onClick={copyEmail}
+                aria-label="Copy email"
+                title="Copy email to clipboard"
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                </svg>
+              </button>
+            </div>
           </div>
           
           <div className="footer-section">
