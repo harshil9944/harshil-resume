@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import './App.css'
 import { portfolioConfigs } from './portfolioConfig'
 
@@ -12,6 +12,8 @@ function App({ careerPath = 'aie' }) {
   const [activeSection, setActiveSection] = useState('home')
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [toast, setToast] = useState({ show: false, message: '' })
+  const tabsRef = useRef(null)
+  const indicatorRef = useRef(null)
 
   useEffect(() => {
     const handleScroll = () => {
@@ -74,6 +76,30 @@ function App({ careerPath = 'aie' }) {
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
+  
+  // Update indicator position when active tab changes
+  useEffect(() => {
+    const updateIndicator = () => {
+      if (tabsRef.current && indicatorRef.current) {
+        const activeButton = tabsRef.current.querySelector('.tab.active')
+        if (activeButton) {
+          const tabsContainer = tabsRef.current
+          const indicator = indicatorRef.current
+          const containerRect = tabsContainer.getBoundingClientRect()
+          const activeRect = activeButton.getBoundingClientRect()
+          
+          indicator.style.width = `${activeRect.width}px`
+          indicator.style.transform = `translateX(${activeRect.left - containerRect.left}px)`
+        }
+      }
+    }
+    
+    updateIndicator()
+    
+    // Update on window resize
+    window.addEventListener('resize', updateIndicator)
+    return () => window.removeEventListener('resize', updateIndicator)
+  }, [activeTab])
 
   const shareOn = (platform) => {
     const url = window.location.href
@@ -247,56 +273,106 @@ function App({ careerPath = 'aie' }) {
         </section>
 
         <section className={`section compact ${isVisible ? 'visible' : ''}`} id="projects">
-          <div className="tabs" aria-label="Resume sections">
-            <button
-              type="button"
-              className={`tab ${activeTab === 'about' ? 'active' : ''}`}
-              onClick={() => setActiveTab('about')}
-            >
-              About
-            </button>
-            <button
-              type="button"
-              className={`tab ${activeTab === 'skills' ? 'active' : ''}`}
-              onClick={() => setActiveTab('skills')}
-            >
-              Skills
-            </button>
-            <button
-              type="button"
-              className={`tab ${activeTab === 'education' ? 'active' : ''}`}
-              onClick={() => setActiveTab('education')}
-            >
-              Education
-            </button>
-            <button
-              type="button"
-              className={`tab ${activeTab === 'experience' ? 'active' : ''}`}
-              onClick={() => setActiveTab('experience')}
-            >
-              Experience
-            </button>
-            <button
-              type="button"
-              className={`tab ${activeTab === 'projects' ? 'active' : ''}`}
-              onClick={() => setActiveTab('projects')}
-            >
-              Projects
-            </button>
-            <button
-              type="button"
-              className={`tab ${activeTab === 'research' ? 'active' : ''}`}
-              onClick={() => setActiveTab('research')}
-            >
-              Research
-            </button>
-            <button
-              type="button"
-              className={`tab ${activeTab === 'certification' ? 'active' : ''}`}
-              onClick={() => setActiveTab('certification')}
-            >
-              Certification
-            </button>
+          <div className="tabs-wrapper">
+            <div className="tabs" ref={tabsRef} aria-label="Resume sections" role="tablist">
+              <button
+                type="button"
+                role="tab"
+                aria-selected={activeTab === 'about'}
+                className={`tab ${activeTab === 'about' ? 'active' : ''}`}
+                onClick={() => setActiveTab('about')}
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                  <circle cx="12" cy="7" r="4"/>
+                </svg>
+                <span>About</span>
+              </button>
+              <button
+                type="button"
+                role="tab"
+                aria-selected={activeTab === 'skills'}
+                className={`tab ${activeTab === 'skills' ? 'active' : ''}`}
+                onClick={() => setActiveTab('skills')}
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                  <path d="M2 17l10 5 10-5M2 12l10 5 10-5"/>
+                </svg>
+                <span>Skills</span>
+              </button>
+              <button
+                type="button"
+                role="tab"
+                aria-selected={activeTab === 'education'}
+                className={`tab ${activeTab === 'education' ? 'active' : ''}`}
+                onClick={() => setActiveTab('education')}
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+                  <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+                </svg>
+                <span>Education</span>
+              </button>
+              <button
+                type="button"
+                role="tab"
+                aria-selected={activeTab === 'experience'}
+                className={`tab ${activeTab === 'experience' ? 'active' : ''}`}
+                onClick={() => setActiveTab('experience')}
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                  <circle cx="12" cy="10" r="3"/>
+                </svg>
+                <span>Experience</span>
+              </button>
+              <button
+                type="button"
+                role="tab"
+                aria-selected={activeTab === 'projects'}
+                className={`tab ${activeTab === 'projects' ? 'active' : ''}`}
+                onClick={() => setActiveTab('projects')}
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <rect x="3" y="3" width="7" height="7"/>
+                  <rect x="14" y="3" width="7" height="7"/>
+                  <rect x="14" y="14" width="7" height="7"/>
+                  <rect x="3" y="14" width="7" height="7"/>
+                </svg>
+                <span>Projects</span>
+              </button>
+              <button
+                type="button"
+                role="tab"
+                aria-selected={activeTab === 'research'}
+                className={`tab ${activeTab === 'research' ? 'active' : ''}`}
+                onClick={() => setActiveTab('research')}
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <circle cx="11" cy="11" r="8"/>
+                  <path d="M21 21l-4.35-4.35"/>
+                </svg>
+                <span>Research</span>
+              </button>
+              <button
+                type="button"
+                role="tab"
+                aria-selected={activeTab === 'certification'}
+                className={`tab ${activeTab === 'certification' ? 'active' : ''}`}
+                onClick={() => setActiveTab('certification')}
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                  <polyline points="22 4 12 14.01 9 11.01"/>
+                </svg>
+                <span>Certification</span>
+              </button>
+              <div 
+                ref={indicatorRef}
+                className="tab-indicator"
+              ></div>
+            </div>
           </div>
 
           <div className="tab-panel">
