@@ -137,7 +137,7 @@ function App({ careerPath = 'aie' }) {
       
       <nav 
         className={`navbar ${scrolled ? 'scrolled' : ''}`}
-        style={{ '--scroll-progress': `${scrollProgress}%` } as React.CSSProperties}
+        style={{ '--scroll-progress': `${scrollProgress}%` }}
       >
         <div className="nav-container">
           <a href="#home" className="nav-logo" onClick={(e) => { e.preventDefault(); scrollToSection('home') }}>
