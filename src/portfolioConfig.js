@@ -55,16 +55,23 @@ export const portfolioConfigs = {
     },
     about: 'Project Manager specializing in web application development projects. Skilled at planning, organizing, and executing complex web projects while leading developers, designers, and QA teams. Experience with sprint planning, deadline management, technical risk mitigation, and stakeholder communication. Strong technical understanding of frontend, backend, and cloud technologies.',
     skills: [
-      'Project Planning', 'Sprint Planning', 'Agile/Scrum', 'Waterfall',
-      'Timeline & Budget Management', 'Resource Allocation',
+      'Project Planning', 'Agile/Scrum', 'Waterfall Methodology',
+      'Timeline Management', 'Resource Allocation',
       'Risk Management & Mitigation', 'Stakeholder Management',
       'Team Leadership', 'Cross-functional Coordination',
       'Technical Understanding (React, Node.js, Django, PostgreSQL)',
       'Web Technologies (Frontend, Backend, APIs, Databases)',
-      'DevOps Awareness (Docker, AWS, CI/CD)',
       'Communication & Reporting', 'Scope Management', 'Quality Assurance'
     ],
     focus: 'web application project delivery, team coordination, and technical excellence',
+    projects: [
+      {
+        title: 'One Water Connect - Pallet Tracking System',
+        description: 'Led the development and deployment of a comprehensive pallet tracking system for One Water. Devised an innovative tracking methodology that enables real-time monitoring of pallet status in the facility. Successfully managed the end-to-end project lifecycle, from requirements gathering with stakeholders to deployment and user training. The application provides seamless visibility for both stakeholders and employees, significantly improving logistics efficiency and reducing operational costs.',
+        technologies: 'Project Management · Web Application Development · Logistics Management · Stakeholder Management · Agile/Scrum · Global Deployment',
+        links: []
+      }
+    ],
     experience: [
       {
         title: 'Project Manager',

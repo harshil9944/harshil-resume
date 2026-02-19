@@ -334,50 +334,73 @@ function App({ careerPath = 'aie' }) {
               <>
                 <h2>Projects</h2>
                 <div className="grid">
-                  <article className="card">
-                    <h3>Customer Lifetime Value Prediction</h3>
-                    <p className="muted">
-                      Analyzed transactional data and engineered RFM (Recency, Frequency, Monetary) features. Applied K-Means 
-                      clustering to segment customers into value tiers and built an XGBoost model achieving 96% prediction accuracy. 
-                      Implemented custom CUDA kernels for 10x inference speed improvement.
-                    </p>
-                    <p className="tagline">Python · XGBoost · CUDA · Machine Learning</p>
-                    <div className="card-links">
-                      <a href="#" target="_blank" rel="noreferrer">
-                        GitHub
-                      </a>
-                    </div>
-                  </article>
+                  {config.projects && config.projects.length > 0 ? (
+                    config.projects.map((project, index) => (
+                      <article className="card" key={index}>
+                        <h3>{project.title}</h3>
+                        <p className="muted">
+                          {project.description}
+                        </p>
+                        <p className="tagline">{project.technologies}</p>
+                        {project.links && project.links.length > 0 && (
+                          <div className="card-links">
+                            {project.links.map((link, linkIndex) => (
+                              <a key={linkIndex} href={link.url} target="_blank" rel="noreferrer">
+                                {link.label}
+                              </a>
+                            ))}
+                          </div>
+                        )}
+                      </article>
+                    ))
+                  ) : (
+                    <>
+                      <article className="card">
+                        <h3>Customer Lifetime Value Prediction</h3>
+                        <p className="muted">
+                          Analyzed transactional data and engineered RFM (Recency, Frequency, Monetary) features. Applied K-Means 
+                          clustering to segment customers into value tiers and built an XGBoost model achieving 96% prediction accuracy. 
+                          Implemented custom CUDA kernels for 10x inference speed improvement.
+                        </p>
+                        <p className="tagline">Python · XGBoost · CUDA · Machine Learning</p>
+                        <div className="card-links">
+                          <a href="#" target="_blank" rel="noreferrer">
+                            GitHub
+                          </a>
+                        </div>
+                      </article>
 
-                  <article className="card">
-                    <h3>Fraud Detection Using Machine Learning</h3>
-                    <p className="muted">
-                      Analyzed and validated financial transaction data to identify fraud patterns. Experimented with multiple ML 
-                      algorithms (Naive Bayes, Random Forest, Logistic Regression). Successfully deployed Random Forest model achieving 
-                      99.5% accuracy in detecting fraudulent transactions.
-                    </p>
-                    <p className="tagline">Python · Random Forest · Data Analysis</p>
-                    <div className="card-links">
-                      <a href="#" target="_blank" rel="noreferrer">
-                        GitHub
-                      </a>
-                    </div>
-                  </article>
+                      <article className="card">
+                        <h3>Fraud Detection Using Machine Learning</h3>
+                        <p className="muted">
+                          Analyzed and validated financial transaction data to identify fraud patterns. Experimented with multiple ML 
+                          algorithms (Naive Bayes, Random Forest, Logistic Regression). Successfully deployed Random Forest model achieving 
+                          99.5% accuracy in detecting fraudulent transactions.
+                        </p>
+                        <p className="tagline">Python · Random Forest · Data Analysis</p>
+                        <div className="card-links">
+                          <a href="#" target="_blank" rel="noreferrer">
+                            GitHub
+                          </a>
+                        </div>
+                      </article>
 
-                  <article className="card">
-                    <h3>Seizure Prediction Using CNNs</h3>
-                    <p className="muted">
-                      Developed a hybrid CNN and self-attention model for early prediction of epileptic seizures using EEG signals. 
-                      Research paper exploring novel techniques for seizure prediction to improve patient outcomes and enable 
-                      preventive interventions.
-                    </p>
-                    <p className="tagline">Python · TensorFlow · Deep Learning · Research</p>
-                    <div className="card-links">
-                      <a href="#" target="_blank" rel="noreferrer">
-                        GitHub
-                      </a>
-                    </div>
-                  </article>
+                      <article className="card">
+                        <h3>Seizure Prediction Using CNNs</h3>
+                        <p className="muted">
+                          Developed a hybrid CNN and self-attention model for early prediction of epileptic seizures using EEG signals. 
+                          Research paper exploring novel techniques for seizure prediction to improve patient outcomes and enable 
+                          preventive interventions.
+                        </p>
+                        <p className="tagline">Python · TensorFlow · Deep Learning · Research</p>
+                        <div className="card-links">
+                          <a href="#" target="_blank" rel="noreferrer">
+                            GitHub
+                          </a>
+                        </div>
+                      </article>
+                    </>
+                  )}
                 </div>
               </>
             )}
