@@ -1,24 +1,22 @@
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import App from './App'
 import { trackVisitor } from './trackVisitor'
 import './Root.css'
 
 function RootContent() {
   const location = useLocation()
-  const [visitStats, setVisitStats] = useState({})
 
   useEffect(() => {
     // Load stats from localStorage
     const savedStats = localStorage.getItem('visitStats')
     const stats = savedStats ? JSON.parse(savedStats) : {}
-    
+
     const path = location.pathname || '/'
     stats[path] = (stats[path] || 0) + 1
 
     // Save to localStorage
     localStorage.setItem('visitStats', JSON.stringify(stats))
-    setVisitStats(stats)
 
     // Silently log this visit (IP + geo + referrer) to the owner's Google Sheet.
     // Fire-and-forget — never awaited, never throws into render.
