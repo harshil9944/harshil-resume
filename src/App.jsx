@@ -5,6 +5,16 @@ import { portfolioConfigs } from './portfolioConfig'
 // Sidebar navigation items — `id` matches the section rendered in the main area.
 const NAV_ITEMS = [
   {
+    id: 'home',
+    label: 'Home',
+    icon: (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <path d="M3 12L12 3l9 9" />
+        <path d="M5 10v10a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V10" />
+      </svg>
+    ),
+  },
+  {
     id: 'about',
     label: 'About',
     icon: (
@@ -112,7 +122,7 @@ function ThemeToggle({ theme, onToggle, className = '' }) {
 
 function App({ careerPath = 'aie' }) {
   const config = portfolioConfigs[careerPath]
-  const [activeSection, setActiveSection] = useState('about')
+  const [activeSection, setActiveSection] = useState('home')
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'dark')
   const [toast, setToast] = useState({ show: false, message: '' })
@@ -168,6 +178,47 @@ function App({ careerPath = 'aie' }) {
 
   const renderSection = () => {
     switch (activeSection) {
+      case 'home':
+        return (
+          <div className="hero">
+            <div className="hero-glow" aria-hidden="true" />
+            <p className="hero-eyebrow">{config.hero.eyebrow}</p>
+            <h1 className="hero-name">
+              Hi, I&apos;m <span className="hero-name-accent">{config.hero.name.split(' ')[0]}</span>.
+            </h1>
+            <p className="hero-subtitle">{config.hero.subtitle}</p>
+            <div className="hero-actions">
+              <button
+                type="button"
+                className="btn btn-primary"
+                onClick={() => selectSection('projects')}
+              >
+                {config.hero.cta}
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                  <path d="M5 12h14M13 5l7 7-7 7" />
+                </svg>
+              </button>
+              <button
+                type="button"
+                className="btn btn-ghost"
+                onClick={() => selectSection('contact')}
+              >
+                Get in touch
+              </button>
+            </div>
+            <div className="hero-meta">
+              <div className="hero-meta-item">
+                <span className="hero-meta-label">Role</span>
+                <span className="hero-meta-value">{config.hero.meta}</span>
+              </div>
+              <div className="hero-meta-item">
+                <span className="hero-meta-label">Focus</span>
+                <span className="hero-meta-value">{config.focus}</span>
+              </div>
+            </div>
+          </div>
+        )
+
       case 'about':
         return (
           <>
